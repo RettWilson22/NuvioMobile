@@ -1,8 +1,11 @@
 package com.nuvio.app
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.ImageLoader
@@ -12,6 +15,9 @@ import coil3.request.CachePolicy
 import coil3.request.crossfade
 import coil3.svg.SvgDecoder
 import com.nuvio.app.core.poster.CustomPosterFallbackInterceptor
+import com.nuvio.app.core.ui.CustomBackgroundLayer
+import com.nuvio.app.core.ui.CustomBackgroundRepository
+import com.nuvio.app.core.ui.CustomBackgroundUiState
 import com.nuvio.app.core.ui.NativeProfileSwitcherController
 import com.nuvio.app.core.ui.NuvioTheme
 import com.nuvio.app.core.ui.configurePlatformImageLoader
@@ -69,7 +75,10 @@ fun App(
 }
 
 @Composable
-internal fun AppEnvironment(content: @Composable () -> Unit) {
+internal fun AppEnvironment(
+    applyCustomBackground: Boolean = true,
+    content: @Composable () -> Unit,
+) {
     if (!platformProvidesImageLoader) {
         setSingletonImageLoaderFactory { context ->
             ImageLoader.Builder(context)
@@ -99,7 +108,25 @@ internal fun AppEnvironment(content: @Composable () -> Unit) {
 
     val customThemeColors by ThemeSettingsRepository.customThemeColors.collectAsStateWithLifecycle()
 
-    NuvioTheme(appTheme = selectedTheme, amoled = amoledEnabled, customThemeColors = customThemeColors) {
-        content()
+    val customBackground by remember {
+        CustomBackgroundRepository.ensureLoaded()
+        CustomBackgroundRepository.uiState
+    }.collectAsStateWithLifecycle()
+    val activeBackground = if (applyCustomBackground) customBackground else CustomBackgroundUiState()
+
+    NuvioTheme(
+        appTheme = selectedTheme,
+        amoled = amoledEnabled,
+        customThemeColors = customThemeColors,
+        customBackground = activeBackground,
+    ) {
+        if (activeBackground.isActive) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CustomBackgroundLayer(state = activeBackground)
+                content()
+            }
+        } else {
+            content()
+        }
     }
 }

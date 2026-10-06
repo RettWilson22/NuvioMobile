@@ -32,6 +32,7 @@ import com.nuvio.app.features.streams.StreamsRepository
 import com.nuvio.app.features.tracking.TrackingProviderRegistry
 import com.nuvio.app.features.tracking.TrackingSettingsRepository
 import com.nuvio.app.core.ui.CardDepthStyleRepository
+import com.nuvio.app.core.ui.CustomBackgroundRepository
 import com.nuvio.app.core.ui.PosterCardStyleRepository
 import com.nuvio.app.features.watchprogress.ContinueWatchingPreferencesRepository
 import com.nuvio.app.features.watchprogress.ContinueWatchingEnrichmentCache
@@ -72,6 +73,7 @@ internal object LocalAccountDataCleaner {
         ThemeSettingsRepository.clearLocalState()
         PosterCardStyleRepository.clearLocalState()
         CardDepthStyleRepository.clearLocalState()
+        CustomBackgroundRepository.clearLocalState()
         TrackingProviderRegistry.clearLocalState()
         TrackingSettingsRepository.clearLocalState()
         PlayerSettingsRepository.clearLocalState()

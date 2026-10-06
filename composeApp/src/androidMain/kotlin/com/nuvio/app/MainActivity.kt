@@ -60,6 +60,7 @@ import com.nuvio.app.features.simkl.SimklSyncStorage
 import com.nuvio.app.features.tmdb.TmdbSettingsStorage
 import com.nuvio.app.features.updater.AndroidAppUpdaterPlatform
 import com.nuvio.app.core.ui.CardDepthStyleStorage
+import com.nuvio.app.core.ui.CustomBackgroundStorage
 import com.nuvio.app.core.ui.PosterCardStyleStorage
 import com.nuvio.app.core.poster.CustomPosterUrlStorage
 import com.nuvio.app.features.watched.WatchedStorage
@@ -114,6 +115,7 @@ open class MainActivity : AppCompatActivity() {
         PosterCardStyleStorage.initialize(applicationContext)
         CustomPosterUrlStorage.initialize(applicationContext)
         CardDepthStyleStorage.initialize(applicationContext)
+        CustomBackgroundStorage.initialize(applicationContext)
         DebridSettingsStorage.initialize(applicationContext)
         TmdbSettingsStorage.initialize(applicationContext)
         MdbListSettingsStorage.initialize(applicationContext)

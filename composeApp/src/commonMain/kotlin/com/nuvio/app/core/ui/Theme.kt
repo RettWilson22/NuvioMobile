@@ -198,13 +198,30 @@ fun NuvioTheme(
     appTheme: AppTheme = AppTheme.WHITE,
     amoled: Boolean = false,
     customThemeColors: CustomThemeColors = CustomThemeColors.Default,
+    customBackground: CustomBackgroundUiState = CustomBackgroundUiState(),
     content: @Composable () -> Unit,
 ) {
     val palette = remember(appTheme, customThemeColors) {
         ThemeColors.getColorPalette(appTheme, customThemeColors)
     }
-    val colorScheme = buildColorScheme(palette, amoled = amoled)
-    val tokens = defaultNuvioThemeTokens(palette, amoled = amoled, colorScheme = colorScheme)
+    var colorScheme = buildColorScheme(palette, amoled = amoled)
+    var tokens = defaultNuvioThemeTokens(palette, amoled = amoled, colorScheme = colorScheme)
+
+    // With a custom background, screens go see-through so the background drawn by
+    // AppEnvironment shows behind them, and cards take on the chosen transparency.
+    if (customBackground.isActive) {
+        val cardAlpha = customBackground.cardOpacity / 100f
+        colorScheme = colorScheme.copy(
+            background = Color.Transparent,
+            surfaceVariant = colorScheme.surfaceVariant.copy(alpha = cardAlpha),
+        )
+        tokens = tokens.copy(
+            colors = tokens.colors.copy(
+                background = Color.Transparent,
+                surfaceCard = tokens.colors.surfaceCard.copy(alpha = cardAlpha),
+            ),
+        )
+    }
 
     val density = LocalDensity.current
     CompositionLocalProvider(
