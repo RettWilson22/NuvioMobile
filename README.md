@@ -1,3 +1,5 @@
+> **About this fork:** I added a custom-backgrounds feature to Nuvio. In Settings > Appearance you can pick a solid color, a gradient, or a photo from your library as the app background, with dim and blur sliders. It is saved per profile and works on Android and iOS (Kotlin Multiplatform + Compose). See [the full diff against upstream](https://github.com/RettWilson22/NuvioMobile/compare/cmp-rewrite...custom-backgrounds). The original project README follows.
+
 <div align="center">
 
   <img src="https://nuvio.tv/assets/nuvio-app-logo-wordmark.webp" alt="Nuvio" width="320" />
