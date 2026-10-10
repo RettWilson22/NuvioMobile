@@ -30,15 +30,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
 import com.nuvio.app.core.ui.Chip
+import com.nuvio.app.core.ui.CustomBackgroundBlurRange
+import com.nuvio.app.core.ui.CustomBackgroundCardOpacityRange
 import com.nuvio.app.core.ui.CustomBackgroundColorPresets
+import com.nuvio.app.core.ui.CustomBackgroundDimRange
 import com.nuvio.app.core.ui.CustomBackgroundGradientPresets
 import com.nuvio.app.core.ui.CustomBackgroundMode
 import com.nuvio.app.core.ui.CustomBackgroundRepository
-import com.nuvio.app.core.ui.MaxCustomBackgroundBlur
 import com.nuvio.app.core.ui.nuvio
 import com.nuvio.app.core.ui.rememberBackgroundImagePicker
 import kotlin.math.roundToInt
@@ -166,7 +169,7 @@ internal fun CustomBackgroundSettingsSection(isTablet: Boolean) {
                 BackgroundSliderRow(
                     label = stringResource(Res.string.settings_background_dim),
                     value = state.dim,
-                    range = 0f..90f,
+                    range = CustomBackgroundDimRange,
                     suffix = "%",
                     horizontalPadding = horizontalPadding,
                     onCommit = CustomBackgroundRepository::setDim,
@@ -175,7 +178,7 @@ internal fun CustomBackgroundSettingsSection(isTablet: Boolean) {
                     BackgroundSliderRow(
                         label = stringResource(Res.string.settings_background_blur),
                         value = state.blur,
-                        range = 0f..MaxCustomBackgroundBlur.toFloat(),
+                        range = CustomBackgroundBlurRange,
                         suffix = "",
                         horizontalPadding = horizontalPadding,
                         onCommit = CustomBackgroundRepository::setBlur,
@@ -184,7 +187,7 @@ internal fun CustomBackgroundSettingsSection(isTablet: Boolean) {
                 BackgroundSliderRow(
                     label = stringResource(Res.string.settings_background_card_opacity),
                     value = state.cardOpacity,
-                    range = 30f..100f,
+                    range = CustomBackgroundCardOpacityRange,
                     suffix = "%",
                     horizontalPadding = horizontalPadding,
                     onCommit = CustomBackgroundRepository::setCardOpacity,
@@ -237,9 +240,9 @@ private fun SwatchRow(
 private fun BackgroundSliderRow(
     label: String,
     value: Int,
-    range: ClosedFloatingPointRange<Float>,
+    range: IntRange,
     suffix: String,
-    horizontalPadding: androidx.compose.ui.unit.Dp,
+    horizontalPadding: Dp,
     onCommit: (Int) -> Unit,
 ) {
     var draft by remember { mutableFloatStateOf(value.toFloat()) }
@@ -262,7 +265,7 @@ private fun BackgroundSliderRow(
             value = draft,
             onValueChange = { draft = it },
             onValueChangeFinished = { onCommit(draft.roundToInt()) },
-            valueRange = range,
+            valueRange = range.first.toFloat()..range.last.toFloat(),
             colors = SliderDefaults.colors(
                 thumbColor = MaterialTheme.colorScheme.primary,
                 activeTrackColor = MaterialTheme.colorScheme.primary,

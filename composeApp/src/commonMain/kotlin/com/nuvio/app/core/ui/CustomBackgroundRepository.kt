@@ -12,7 +12,9 @@ import kotlinx.serialization.json.Json
 internal const val DefaultCustomBackgroundDim = 45
 internal const val DefaultCustomBackgroundBlur = 0
 internal const val DefaultCustomBackgroundCardOpacity = 85
-internal const val MaxCustomBackgroundBlur = 40
+internal val CustomBackgroundDimRange = 0..90
+internal val CustomBackgroundBlurRange = 0..40
+internal val CustomBackgroundCardOpacityRange = 30..100
 
 enum class CustomBackgroundMode {
     Off,
@@ -21,7 +23,7 @@ enum class CustomBackgroundMode {
     Image,
 }
 
-/** Preset solid colors offered in Settings → Appearance → Background. */
+/** Preset solid colors offered in Settings > Appearance > Background. */
 val CustomBackgroundColorPresets: List<Color> = listOf(
     Color(0xFF0B1426),
     Color(0xFF1B0F2E),
@@ -33,7 +35,7 @@ val CustomBackgroundColorPresets: List<Color> = listOf(
     Color(0xFF0E2F35),
 )
 
-/** Preset gradients (top → bottom) offered in Settings → Appearance → Background. */
+/** Preset gradients, top to bottom, offered in Settings > Appearance > Background. */
 val CustomBackgroundGradientPresets: List<List<Color>> = listOf(
     listOf(Color(0xFF1E3C72), Color(0xFF0B0F1A)),
     listOf(Color(0xFF42275A), Color(0xFF734B6D), Color(0xFF0D0D0D)),
@@ -61,11 +63,11 @@ data class CustomBackgroundUiState(
     val colorIndex: Int = 0,
     val gradientIndex: Int = 0,
     val imageUrl: String? = null,
-    /** Black overlay on top of the background, 0–90%. Keeps text readable over bright photos. */
+    /** Percent of black drawn over the background, so text stays readable over bright photos. */
     val dim: Int = DefaultCustomBackgroundDim,
     /** Blur radius in dp applied to photo backgrounds (Android 12+ and iOS). */
     val blur: Int = DefaultCustomBackgroundBlur,
-    /** Opacity of cards/surfaces drawn over the background, 30–100%. */
+    /** Opacity percent of the cards and surfaces drawn over the background. */
     val cardOpacity: Int = DefaultCustomBackgroundCardOpacity,
 ) {
     val isActive: Boolean
@@ -141,15 +143,15 @@ object CustomBackgroundRepository {
     }
 
     fun setDim(dim: Int) {
-        update { it.copy(dim = dim.coerceIn(0, 90)) }
+        update { it.copy(dim = dim.coerceIn(CustomBackgroundDimRange)) }
     }
 
     fun setBlur(blur: Int) {
-        update { it.copy(blur = blur.coerceIn(0, MaxCustomBackgroundBlur)) }
+        update { it.copy(blur = blur.coerceIn(CustomBackgroundBlurRange)) }
     }
 
     fun setCardOpacity(opacity: Int) {
-        update { it.copy(cardOpacity = opacity.coerceIn(30, 100)) }
+        update { it.copy(cardOpacity = opacity.coerceIn(CustomBackgroundCardOpacityRange)) }
     }
 
     fun resetToDefaults() {
@@ -182,9 +184,9 @@ object CustomBackgroundRepository {
                 colorIndex = stored.colorIndex.coerceIn(CustomBackgroundColorPresets.indices),
                 gradientIndex = stored.gradientIndex.coerceIn(CustomBackgroundGradientPresets.indices),
                 imageUrl = stored.imageUrl,
-                dim = stored.dim.coerceIn(0, 90),
-                blur = stored.blur.coerceIn(0, MaxCustomBackgroundBlur),
-                cardOpacity = stored.cardOpacity.coerceIn(30, 100),
+                dim = stored.dim.coerceIn(CustomBackgroundDimRange),
+                blur = stored.blur.coerceIn(CustomBackgroundBlurRange),
+                cardOpacity = stored.cardOpacity.coerceIn(CustomBackgroundCardOpacityRange),
             )
         } else {
             CustomBackgroundUiState()
