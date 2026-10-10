@@ -51,6 +51,9 @@ internal actual object CustomBackgroundStorage {
         }.getOrNull()
     }
 
+    actual fun imageUrl(fileName: String): String? =
+        imageDirectory?.let { File(it, fileName).toURI().toString() }
+
     actual fun deleteImage(url: String) {
         val directory = imageDirectory ?: return
         runCatching {

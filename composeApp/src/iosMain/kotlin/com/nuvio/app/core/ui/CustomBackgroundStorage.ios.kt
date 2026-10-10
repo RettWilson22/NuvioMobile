@@ -51,10 +51,13 @@ internal actual object CustomBackgroundStorage {
             error = null,
         )
         // Unique name per pick so Coil's cache never shows a stale image.
-        val path = "$directory/background_${Random.nextLong().toULong().toString(16)}.jpg"
-        if (!bytes.writeToFile(path)) return null
-        return NSURL.fileURLWithPath(path).absoluteString ?: "file://$path"
+        val fileName = "background_${Random.nextLong().toULong().toString(16)}.jpg"
+        if (!bytes.writeToFile("$directory/$fileName")) return null
+        return imageUrl(fileName)
     }
+
+    actual fun imageUrl(fileName: String): String? =
+        NSURL.fileURLWithPath("$directory/$fileName").absoluteString
 
     private fun ByteArray.writeToFile(path: String): Boolean {
         val file = fopen(path, "wb") ?: return false
