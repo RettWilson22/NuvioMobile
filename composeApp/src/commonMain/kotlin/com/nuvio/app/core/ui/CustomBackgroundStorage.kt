@@ -8,6 +8,10 @@ internal expect object CustomBackgroundStorage {
 
     /** Writes the picked photo to app storage and returns a `file://` URL Coil can load, or null on failure. */
     fun saveImage(bytes: ByteArray): String?
+
+    /** The `file://` URL of a photo saved by [saveImage], given its file name. */
+    fun imageUrl(fileName: String): String?
+
     fun deleteImage(url: String)
 }
 

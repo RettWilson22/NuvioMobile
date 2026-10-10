@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -52,7 +53,7 @@ private data class StoredCustomBackgroundPreferences(
     val mode: String = CustomBackgroundMode.Off.name,
     val colorIndex: Int = 0,
     val gradientIndex: Int = 0,
-    val imageUrl: String? = null,
+    @SerialName("imageUrl") val imageFileName: String? = null,
     val dim: Int = DefaultCustomBackgroundDim,
     val blur: Int = DefaultCustomBackgroundBlur,
     val cardOpacity: Int = DefaultCustomBackgroundCardOpacity,
@@ -183,7 +184,9 @@ object CustomBackgroundRepository {
                     ?: CustomBackgroundMode.Off,
                 colorIndex = stored.colorIndex.coerceIn(CustomBackgroundColorPresets.indices),
                 gradientIndex = stored.gradientIndex.coerceIn(CustomBackgroundGradientPresets.indices),
-                imageUrl = stored.imageUrl,
+                // Only the file name is stored because iOS moves the app container, and so every
+                // absolute path, when the app updates. Payloads saved before that held the full URL.
+                imageUrl = stored.imageFileName?.substringAfterLast('/')?.let(CustomBackgroundStorage::imageUrl),
                 dim = stored.dim.coerceIn(CustomBackgroundDimRange),
                 blur = stored.blur.coerceIn(CustomBackgroundBlurRange),
                 cardOpacity = stored.cardOpacity.coerceIn(CustomBackgroundCardOpacityRange),
@@ -201,7 +204,7 @@ object CustomBackgroundRepository {
                     mode = state.mode.name,
                     colorIndex = state.colorIndex,
                     gradientIndex = state.gradientIndex,
-                    imageUrl = state.imageUrl,
+                    imageFileName = state.imageUrl?.substringAfterLast('/'),
                     dim = state.dim,
                     blur = state.blur,
                     cardOpacity = state.cardOpacity,
