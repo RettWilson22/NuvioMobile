@@ -1,4 +1,4 @@
-> **About this fork:** I added a custom-backgrounds feature to Nuvio. In Settings > Appearance you can pick a solid color, a gradient, or a photo from your library as the app background, with dim and blur sliders. It is saved per profile and works on Android and iOS (Kotlin Multiplatform + Compose). See [the full diff against upstream](https://github.com/RettWilson22/NuvioMobile/compare/cmp-rewrite...custom-backgrounds). The original project README follows.
+> This is my fork of Nuvio. I added custom backgrounds: under Settings > Appearance you can set the app background to a solid color, a gradient or a photo from your library, then adjust the dim, blur and card opacity. The choice is saved per profile, and the feature is written for both Android and iOS in Kotlin Multiplatform and Compose. Here's [the full diff against upstream](https://github.com/RettWilson22/NuvioMobile/compare/cmp-rewrite...custom-backgrounds). The original README follows.
 
 <div align="center">
 
